@@ -1,42 +1,59 @@
 window.onload = function() {
 
-  var face = document.getElementById('grip');
+  var grip = document.getElementById('grip');
   var reset = document.getElementById('reset');
+  var anchor = document.getElementById('anchor');
+  var anchorRect = anchor.getBoundingClientRect();
+
+  var svg = document.getElementById('svg');
+  var line = document.getElementById('line');
+
+  var bodyID = document.getElementById('body-id');
+  var clientWindow = bodyID.getBoundingClientRect();
+  
+  svg.setAttribute('viewBox', '0 0 ' + (Math.round(clientWindow.width)) + ' ' + (Math.round(clientWindow.height)));
+  svg.setAttribute('width', Math.round(clientWindow.width));
+  svg.setAttribute('height', Math.round(clientWindow.height));
 
   document.addEventListener("click", function(e) {
-    var element = face.getBoundingClientRect();
-    if (e.clientX >= element.left && e.clientX <= element.right && e.clientY >= element.top && e.clientY <= element.bottom) {
-      if (face.className !== "") {
+    var gripRect = grip.getBoundingClientRect();
+    if (e.clientX >= gripRect.left && e.clientX <= gripRect.right && e.clientY >= gripRect.top && e.clientY <= gripRect.bottom) {
+      if (grip.className !== "") {
         document.removeEventListener("mousemove", mover);
-        face.className = "";
+        grip.className = "";
       } else {
-          face.className = "whoa";
+          grip.className = "whoa";
           var mover = document.addEventListener("mousemove", function(f) {
-            if (face.className !== "") {
-              face.style.left = f.clientX + 'px';
-              face.style.top = f.clientY + 'px';
+            if (grip.className !== "") {
+              grip.style.left = f.clientX + 'px';
+              grip.style.top = f.clientY + 'px';
+              line.setAttribute('x1', f.clientX);
+              line.setAttribute('y1', f.clientY);
+              line.setAttribute('x2', (anchorRect.left + (anchorRect.width/2)));
+              line.setAttribute('y2', (anchorRect.top + (anchorRect.width/2)));
+              console.log(gripRect.width);
               // console.log(f.clientX, f.clientY);
               // console.log("originX = ", origin.x, "originY = ", origin.y);
             }
           });
       }
     }
-    console.log(element.left + (element.width/2), element.top + (element.height/2));
-    console.log(e.clientX, e.clientY, face.offsetWidth, face.offsetHeight);
+    console.log(gripRect.left + (gripRect.width/2), gripRect.top + (gripRect.height/2));
+    console.log(e.clientX, e.clientY, grip.offsetWidth, grip.offsetHeight);
     var origin = {
       x: e.clientX,
       y: e.clientY
     };
 
-    // if (face.className !== "") {
+    // if (grip.className !== "") {
     //   bodyID.removeEventListener("mousemove", mover);
-    //   face.className = "";
+    //   grip.className = "";
     // } else {
-    //     face.className = "whoa";
+    //     grip.className = "whoa";
     //     var mover = bodyID.addEventListener("mousemove", function(f) {
-    //       if (face.className !== "") {
-    //         face.style.left = f.clientX + 'px';
-    //         face.style.top = f.clientY + 'px';
+    //       if (grip.className !== "") {
+    //         grip.style.left = f.clientX + 'px';
+    //         grip.style.top = f.clientY + 'px';
     //         // console.log(f.clientX, f.clientY);
     //         // console.log("originX = ", origin.x, "originY = ", origin.y);
     //       }
@@ -45,8 +62,11 @@ window.onload = function() {
   });
 
   reset.addEventListener("click", function() {
-    face.style.left = "50%";
-    face.style.top = "50%";
+    grip.style.left = "50%";
+    grip.style.top = "50%";
+    line.setAttribute('x1', (Math.round(clientWindow.width/2)));
+    line.setAttribute('y1', (Math.round(clientWindow.height/2)));
+
   });
 
 };
